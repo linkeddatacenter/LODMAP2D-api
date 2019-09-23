@@ -1,0 +1,1 @@
+CONSTRUCT {?s ?p ?o} WHERE {GRAPH <urn:bgo:account:<?php echo "$resourceId"?>> {?s?p?o}}

@@ -18,19 +18,26 @@ use Psr\Http\Server\MiddlewareInterface;
 class Controller implements MiddlewareInterface
 {
     use Psr11Trait;
+    
+    
+    private function loadQuery(ServerRequestInterface $request): String
+    {
+        $resource = $request->getAttribute('resource');
+        $resourceId = $request->getAttribute('id');
+
+        // N.B. inside the required query, you can use $resource and $resourceId
+        ob_start();
+        require(__DIR__ . "/Queries/{$resource}.php");
+        
+        return ob_get_clean();     
+    }
+    
        
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $store = $this->get('store');
-        $resource = $request->getAttribute('resource');
-        $resourceId = $request->getAttribute('id');
-        $queryTemplate = file_get_contents(__DIR__ . "/Queries/{$resource}.rq");
-        
-        // expand variables inside $query
-        eval("\$query = \"$queryTemplate\";");
               
-        $response = $store->request('POST', null, [
-            'body' => $query,
+        $response = $this->get('store')->request('POST', null, [
+            'body' =>  $this->loadQuery($request),
             'headers' => [
                 'Content-Type'  => 'application/sparql-query',
                 'Accept'        => 'text/turtle'
@@ -38,7 +45,6 @@ class Controller implements MiddlewareInterface
         ]);
               
         return $response
-            ->withoutHeader('server')
             ->withoutHeader('Content-disposition')
             ->withoutHeader('Transfer-Encoding')
         ;
