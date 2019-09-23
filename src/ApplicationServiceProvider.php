@@ -27,11 +27,11 @@ class ApplicationServiceProvider implements ServiceProviderInterface
         $app->register(new \uSilex\Provider\Psr7\GuzzleServiceProvider());
         $app->register(new \uSilex\Provider\Psr15\RelayServiceProvider());
         $app['handler.queue'] = [
-            //'errorHandler',
-            //'urlRewriter',          // rewrite request path
-            //'cors',                 //Cross-Origin Resource Sharing (CORS)
-            //'gzipEncoder',          //Compress the response to gzip
-            //'cache',                //Add cache expiration headers
+            'errorHandler',
+            'urlRewriter',          // rewrite request path
+            'cors',                 //Cross-Origin Resource Sharing (CORS)
+            'gzipEncoder',          //Compress the response to gzip
+            'cache',                //Add cache expiration headers
             'fastRoute',            //Handle the routes with fast-route
             'requestHandler',       //Handle the route
         ];
