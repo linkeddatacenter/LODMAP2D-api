@@ -1,0 +1,7 @@
+/vendor
+/dist
+.cache
+.project
+.settings
+.php_cs.cache
+composer.phar

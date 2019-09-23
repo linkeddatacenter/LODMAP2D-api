@@ -1,0 +1,27 @@
+{
+    "require": {
+        "php": "^7.2",
+        "linkeddatacenter/usilex": "^1.2",
+        "linkeddatacenter/url-rewriter": "^1.0",
+        "e-artspace/pimple-env-provider": "^2.0",
+        "guzzlehttp/guzzle": "^6.3",
+        "zendframework/zend-httphandlerrunner": "^1.1",
+        "psr/http-server-middleware": "^1.0",
+        "relay/relay": "~2.0",
+        "middlewares/fast-route": "^1.2",
+        "middlewares/request-handler": "^1.4",
+        "middlewares/encoder": "^1.1",
+        "middlewares/cache": "^1.1",
+        "middlewares/cors": "^1.1",
+        "middlewares/error-handler": "^2.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.1"
+    },
+    "autoload" : {
+        "psr-4": { "LODMAP2D\\": "src/" }
+    },
+    "scripts": {
+        "cs-fix": "php-cs-fixer fix ."
+    }
+}

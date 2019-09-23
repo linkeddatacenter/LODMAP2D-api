@@ -1,0 +1,1 @@
+CONSTRUCT {?s ?p ?o} WHERE {GRAPH <urn:bgo:app> {?s?p?o}}
