@@ -1,91 +1,38 @@
+![ldc](http://linkeddata.center/resources/v4/logo/Logo-colori-trasp_oriz-640x220.png)
+
 API for LODMAP2D application
 ============================
 
-An endpoint compliant with the [LODMAP2D application](https://github.com/linkeddatacenter/LODMAP2D) to an RDF knowledg graph containing
-a [BubbleGraph Ontology](https://github.com/linkeddatacenter/LODMAP-ontologies/tree/master/v1/bgo) 
+LODMAP2D-api is a set of linked data resources to feed a [LODMAP2D application](https://github.com/linkeddatacenter/LODMAP2D)
+It queries a [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1) 
+contained into a knowledge graph through a SPARQL service endpoint.
 
-It exposes the following resources:
+LODMAP2D-api exposes the following resources:
 
 resource                       | payload
 ------------------------------ | -------------------
 /app[.ttl]                     | common LODMAP2D application layout data.
-/account/*account_id*[.ttl]    | data for a *account_id* account
-/partition/*partition_id*[.ttl]| data for *partition_id* partition
+/accounts[.ttl]                | an index of all accounts, including just information used to render the partitions view
+/partitions[.ttl]              | LODMAP2Ddata for all partition views
+/account/*account_id*[.ttl]    | LODMAP2D data for a *account_id* account. 
 /credits[.ttl]                 | LODMAP2D application credits data 
 /terms[.ttl]                   | LODMAP2D application terms & conditions data 
-/accounts[.ttl]                | an index of all accounts, including just information used to render bubbles and tooltips
 
-
+If no resources match criteria defined in correspondent src/Queries, an empty RDF graph is returned (i.e. no 404 error) 
 
 ## Developers quick start
 
-This project is based on the [µSilex framework](https://github.com/linkeddatacenter/uSilex), a superlight modern 
-implementation of the old Silex project. It is fully based on PSR standards; without a single *if* nor a *loop*, this project provides:
-
-- REStful APIs
-- Cross-Origin Resource Sharing (CORS) support
-- response compression
-- full http cache magement
-- fast routing with URI template
-
-The platform is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized  environment up and running. If you do not already have Docker on your computer, 
+The project is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized  environment up and running. If you do not already have Docker on your computer, 
 [it's the right time to install it](https://docs.docker.com/install/).
 
-Create dependencies and cleanup the code:
+Start all required services running `docker-compose up -d` and wait some seconds to let the knowledge graph platform to warm-up and loading test data...
 
-```
-docker run --rm -ti -v $PWD/.:/app composer composer install
-docker run --rm -ti -v $PWD/.:/app composer composer cs-fix
-```
+Docker compose will run the Smart Data as a Service Platform at http://localhost:8080/sdaas
+and will run a simple api endpoint at http://localhost:8000/
 
+Cleanup docker resources with  `docker-compose down`
 
-Run a simple RDF  knowledge graph containing a bgo ontology:
-
-```
-docker network create test
-docker run -d --name sdaas --network test -p 8080:8080 -v $PWD/.:/workspace linkeddatacenter/sdaas-ce
-```
-
-Go to http://localhost:8080/sdaas#update and load the file tests/system/data.trig (serialized in [RDF TRIG](https://www.w3.org/TR/trig)
-
-
-Run the API server conected to the test network (it connetcs to http://sdaas:8080/sdaas/sparql endpoint as backend)
-
-```
-docker run -it --name api --rm --network test -p 8000:8000 -v $PWD/.:/app composer php -S "0.0.0.0:8000" index.php
-```
-
-Test it using an http client (e.g. Postman) or just with a browser (e.g. http://localhost:8000/app )
-
-cleanup docker resources:
-
-```
-docker network rm test
-docker rm -f sdaas
-
-```
-
-## Publish image to dockerhub
-
-
-```
-docker build -t linkeddatacenter/lodmap2d-api .
-docker login --username=yourhubusername --email=youremail@company.com
-docker tag linkeddatacenter/lodmap2d-api linkeddatacenter/lodmap2d-api:x.y.z
-docker push linkeddatacenter/lodmap2d-api
-```
-
-## Using LODMAP2D API image
-
-If you need to personalize the sparql queries needed to generate bgo data streams, create a directory containing
-your new query (e.g. *myqueries*) than you can personalize the LODMAP2D docker image creating a Dockerfile like this:
-
-```
-FROM linkeddatacenter/lodmap2d-api
-
-COPY ./myqueries/*.ru /app/src/Queries/
-ENV LODMAP2D_BACKEND "here your sparql endpoint service url"
-```
+Read the [CONTRIBUTING file](CONTRIBUTING.md) for more info.
 
 
 ## License

@@ -20,24 +20,26 @@ class Controller implements MiddlewareInterface
     use Psr11Trait;
     
     
-    private function loadQuery(ServerRequestInterface $request): String
+    /**
+     *  This function loads in a string an expanded php template.
+     *  N.B. inside the required query, you can use $resource and $resourceId
+     *  If template does not exists it raises an error
+     */
+    private function loadQuery($resource, $resourceId): String
     {
-        $resource = $request->getAttribute('resource');
-        $resourceId = $request->getAttribute('id');
-
-        // N.B. inside the required query, you can use $resource and $resourceId
         ob_start();
         require(__DIR__ . "/Queries/{$resource}.php");
-        
-        return ob_get_clean();     
+        return ob_get_clean();
     }
     
        
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-              
         $response = $this->get('store')->request('POST', null, [
-            'body' =>  $this->loadQuery($request),
+            'body' =>  $this->loadQuery(
+                $request->getAttribute('resource'),
+                $request->getAttribute('id')
+            ),
             'headers' => [
                 'Content-Type'  => 'application/sparql-query',
                 'Accept'        => 'text/turtle'

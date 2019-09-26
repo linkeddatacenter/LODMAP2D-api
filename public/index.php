@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 use uSilex\Application;
 use LODMAP2D\ApplicationServiceProvider;
@@ -14,7 +14,9 @@ $app->register(new ApplicationServiceProvider());
 $app->register(new EnvProvider(), array(
     'env.prefix' => 'LODMAP2D_',
     'env.vars' => array(
-        'backend' => 'env.cast.strval',	    // <= (int) LODMAP2D_BACKEND
+        'backend'               => 'env.cast.strval',	    // <= (string) LODMAP2D_BACKEND
+        'CORS.AllowedOrigins'   => 'env.cast.strval',	    // <= (string) LODMAP2D_CORS_ALLOWEDORIGINS
+        'cache.expire'          => 'env.cast.strval',	    // <= (string) LODMAP2D_CACHE_EXPIRE
     )
 ));
 

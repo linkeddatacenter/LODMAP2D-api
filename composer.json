@@ -12,16 +12,23 @@
         "middlewares/request-handler": "^1.4",
         "middlewares/encoder": "^1.1",
         "middlewares/cache": "^1.1",
-        "middlewares/cors": "^1.1",
-        "middlewares/error-handler": "^2.0"
+        "middlewares/cors": "^1.1"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.1"
+        "phpunit/phpunit": "^7",
+        "middlewares/utils": "^2.1",
+        "friendsofphp/php-cs-fixer": "^2.1",
+        "squizlabs/php_codesniffer": "^3.3"
     },
     "autoload" : {
         "psr-4": { "LODMAP2D\\": "src/" }
     },
     "scripts": {
-        "cs-fix": "php-cs-fixer fix ."
+        "test": [
+            "phpunit",
+            "phpcs src"
+        ],
+        "cs-fix": "php-cs-fixer fix .",
+        "serve": "php -S 0.0.0.0:8000 public/index.php"
     }
 }

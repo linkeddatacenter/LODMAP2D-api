@@ -1,0 +1,28 @@
+version: '3'
+services:
+  # You can use any SPARQL 1.1 service like Virtuoso, Blazegraph or SDaaS
+  # You can also connect to a remote service, in this case this session is not  
+  # necessary.
+  # but you have  to change LODMAP2D_BACKEND according your configuration
+  # and manually loading daple data
+  sdaas:
+    image: linkeddatacenter/sdaas-ce
+    ports:
+      - "8080:8080"
+    command: bash -c "
+       /sdaas-start
+       && sdaas -f  build.sdaas --reboot
+       && /sdaas-stop
+       && /sdaas-start --foreground"
+    volumes:
+      - ./tests/system:/workspace
+  api:
+    image: composer:1
+    ports:
+      - "8000:8000"
+    command: bash -c "composer install && composer run-script serve --timeout=0"
+    environment:
+      - LODMAP2D_BACKEND=http://sdaas:8080/sdaas/sparql
+      - LODMAP2D_CACHE_EXPIRE=+1 second
+    volumes:
+      - .:/app
