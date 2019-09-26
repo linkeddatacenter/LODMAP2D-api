@@ -3,8 +3,8 @@
 API for LODMAP2D application
 ============================
 
-LODMAP2D-api is a set of linked data resources to feed a [LODMAP2D application](https://github.com/linkeddatacenter/LODMAP2D)
-It queries a [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1) 
+LODMAP2D-api is a set of linked data resources to feed a [LODMAP2D application](https://github.com/linkeddatacenter/LODMAP2D).
+The code queries a [Bubble Graph Ontology](http://linkeddata.center/lodmap-bgo/v1) 
 contained into a knowledge graph through a SPARQL service endpoint.
 
 LODMAP2D-api exposes the following resources:
@@ -18,7 +18,8 @@ resource                       | payload
 /credits[.ttl]                 | LODMAP2D application credits data 
 /terms[.ttl]                   | LODMAP2D application terms & conditions data 
 
-If no resources match criteria defined in correspondent src/Queries, an empty RDF graph is returned (i.e. no 404 error) 
+If no resources match criteria defined in correspondent src/Queries, an empty RDF graph is returned (i.e. no 404 error)
+Only RDF turtle serialization is supported.
 
 ## Developers quick start
 
