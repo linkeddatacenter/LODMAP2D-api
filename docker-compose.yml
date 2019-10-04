@@ -20,7 +20,7 @@ services:
     image: composer:1
     ports:
       - "8000:8000"
-    command: bash -c "composer install && composer run-script serve --timeout=0"
+    command: bash -c "composer install && composer run-script --timeout=0 serve"
     environment:
       - LODMAP2D_BACKEND=http://sdaas:8080/sdaas/sparql
       - LODMAP2D_CACHE_EXPIRE=+1 second

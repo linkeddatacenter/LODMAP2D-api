@@ -36,15 +36,16 @@ docker run --rm -ti -v $PWD/.:/app composer composer test
 docker run --rm -ti -v $PWD/.:/app composer --timeout=0 serve
 ```
 
+
 ## Project overview
 
-This project  fully based on PSR standards. 
-It uses the [µSilex framework](https://github.com/linkeddatacenter/uSilex) and [Middlewares components](https://github.com/middlewares/psr15-middlewares). 
-Its implementation is really simple, without a single *if* nor a *loop*.
+This project uses the [µSilex framework](https://github.com/linkeddatacenter/uSilex) and [Middlewares components](https://github.com/middlewares/psr15-middlewares). 
+The whole source code fully based on PSR standards ans is less than 30 PHP statements without a single *if* nor a *loop*.
 
-Out-o-the-box This project provides:
+Out-of-the-box This project provides:
 
 - LODMAP2D interface to a SPARQL service enpoint
+- ful HTTP content negotiation
 - Cross-Origin Resource Sharing (CORS) support
 - gzip response compression
 - http cache magement

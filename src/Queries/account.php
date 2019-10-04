@@ -1,6 +1,10 @@
+#
+# Returns data related to an Account with bgo:accountId = $resourceId
+# To be consistent with BGO, data about perspectives are also required (see. perspectives.php )
+#
 PREFIX bgo: <http://linkeddata.center/lodmap-bgo/v1#> 
 CONSTRUCT {
-	?account a bgo:Account ;
+	?account 
 		bgo:accountId ?accountId ;
 	    bgo:amount ?amount ;
 	    bgo:referenceAmount ?referenceAmount ;
@@ -10,30 +14,20 @@ CONSTRUCT {
 	    bgo:depiction ?depiction ;
 	    bgo:versionLabel ?versionLabel ;
 	    bgo:hasHistoryRec ?historyRec ;
-	    bgo:hasBreakdown ?breakdown ;
-	    
-	    ?projecting ?perspective
+	    bgo:hasBreakdown ?breakdown 
 	 .
 	 
 	 ?historyRec bgo:versionLabel ?historyVersion ; bgo:amount ?historyAmount . 
 	 ?breakdown bgo:title ?breakdownTitle; bgo:amount ?breakdownAmount . 
-	 
-	 ?perspective ?perspectivePropery ?perspectiveValue.
 }
 WHERE {
-	
-	VALUES ?projecting {
-		bgo:usesHistoricalPerspective
-		bgo:usesBreakdownPerspective
-		bgo:usesMetadataPerspective
-	}
-
-	?account a bgo:Account ; bgo:accountId  ?accountId .
+	?account bgo:accountId  ?accountId ; bgo:amount ?amount .
 	FILTER( ?accountId = "<?php echo $resourceId;?>" )
 	
-    OPTIONAL { ?account bgo:amount ?amount }
+	<?php if ($domainId) echo "?domain bgo:domainId \"$domainId\"; bgo:hasAccount \"$resourceId\" . ";?>
+	
+	OPTIONAL { ?account bgo:title ?title }
     OPTIONAL { ?account bgo:referenceAmount ?referenceAmount }
-    OPTIONAL { ?account bgo:title ?title }
     OPTIONAL { ?account bgo:description ?description }
     OPTIONAL { ?account bgo:abstract ?abstract }
     OPTIONAL { ?account bgo:depiction ?depiction }
@@ -47,11 +41,6 @@ WHERE {
 	OPTIONAL { 
 		?account bgo:hasBreakdown ?breakdown .
 		?breakdown bgo:title ?breakdownTitle ;  bgo:amount ?breakdownAmount 
-	}	
-	
-	OPTIONAL { 
-		?account ?projecting ?perspective .
-	 	?perspective ?perspectivePropery ?perspectiveValue
 	}
 	    
 }

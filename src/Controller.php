@@ -22,10 +22,10 @@ class Controller implements MiddlewareInterface
     
     /**
      *  This function loads in a string an expanded php template.
-     *  N.B. inside the required query, you can use $resource and $resourceId
+     *  N.B. inside the required query, you can use $resource, $domainId and $resourceId
      *  If template does not exists it raises an error
      */
-    private function loadQuery($resource, $resourceId): String
+    private function loadQuery($resource, $resourceId, $domainId): String
     {
         ob_start();
         require(__DIR__ . "/Queries/{$resource}.php");
@@ -38,17 +38,19 @@ class Controller implements MiddlewareInterface
         $response = $this->get('store')->request('POST', null, [
             'body' =>  $this->loadQuery(
                 $request->getAttribute('resource'),
-                $request->getAttribute('id')
+                $request->getAttribute('resourceId'),
+                $request->getAttribute('domainId')
             ),
             'headers' => [
                 'Content-Type'  => 'application/sparql-query',
-                'Accept'        => 'text/turtle'
+                'Accept'        => $request->getHeaderLine('Accept')
             ]
         ]);
               
         return $response
             ->withoutHeader('Content-disposition')
             ->withoutHeader('Transfer-Encoding')
+            ->withHeader('X-Powered-By', 'LinkedData.Center LODMAP2D-api v1.1')
         ;
     }
 }

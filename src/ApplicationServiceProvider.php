@@ -29,12 +29,13 @@ class ApplicationServiceProvider implements ServiceProviderInterface
         $app->register(new \uSilex\Provider\Psr7\GuzzleServiceProvider());
         $app->register(new \uSilex\Provider\Psr15\RelayServiceProvider());
         $app['handler.queue'] = [
-            'urlRewriter',          // rewrite request path to remove .ttl extension
-            'cors',                 //Cross-Origin Resource Sharing (CORS)
-            'gzipEncoder',          //Compress the response to gzip
-            'cache',                //Add cache expiration headers
-            'fastRoute',            //Handle the routes with fast-route
-            'requestHandler',       //Handle the route
+            'contentNegotiation',   // manage content negotiation
+            'urlRewriter',          // rewrite request path to remove extensions
+            'cors',                 // Cross-Origin Resource Sharing (CORS)
+            'gzipEncoder',          // Compress the response to gzip
+            'cache',                // Add cache expiration headers
+            'fastRoute',            // Handle the routes with fast-route
+            'requestHandler',       // Handle the route
         ];
         
         
@@ -56,12 +57,38 @@ class ApplicationServiceProvider implements ServiceProviderInterface
          *             MIDDLEWARES
          ****************************************/
         
+        // manage content negotiation
+        $app['contentNegotiation'] = function () {
+            return new \Middlewares\ContentType([
+                'turtle' => [
+                    'extension' => ['ttl', 'turtle', 'n3', 'txt'],
+                    'mime-type' => ['text/turtle', 'application/x-turtle', 'text/rdf+n3'],
+                    'charset' => true,
+                ],
+                'n-triples' => [
+                    'extension' => ['nt', 'ntriples'],
+                    'mime-type' => ['text/plain', 'application/n-triples', 'application/x-n-triples-RDR' ],
+                    'charset' => true,
+                ],
+                'rdf+xml' => [
+                    'extension' => ['rdf', 'xml','rdfs', 'owl' ],
+                    'mime-type' => ['application/rdf+xml','text/xml', 'application/xml' ],
+                    'charset' => true,
+                ],
+                'jsonld' => [
+                    'extension' => ['jsonld', 'json'],
+                    'mime-type' => ['application/ld+json'],
+                    'charset' => true,
+                ]
+            ]);
+        };
+        
         
         // remove extension form url
         $app['urlRewriter'] = function ($app) {
             return new \LinkedDataCenter\UrlRewriter([
                 '/$' => '/app',             # root defaults to /app
-                '/(.*)\\.ttl$' => '/$1',    # remove .ttl extensions
+                '/(.*)\\.(ttl|turtle|n3|txt|nt|ntriples|rdf|xml|rdfs|owl|jsonld|json)$' => '/$1',    # remove known extensions
             ]);
         };
         
@@ -93,8 +120,10 @@ class ApplicationServiceProvider implements ServiceProviderInterface
         $app['fastRoute'] = function () {
             //Create the router dispatcher
             $dispatcher = \FastRoute\simpleDispatcher(function (\FastRoute\RouteCollector $r) {
-                $r->addRoute('GET', '/{resource:app|credits|terms|accounts|partitions}', 'controller');
-                $r->addRoute('GET', '/{resource:partition|account}/{id}', 'controller');
+                $r->addRoute('GET', '/{resource:app|credits|terms|partitions|accounts}', 'controller');
+                $r->addRoute('GET', '/{resource:account}/{resourceId:\\w+}', 'controller');
+                $r->addRoute('GET', '/{domainId:\\w+}/{resource:app|credits|terms|partitions|accounts}', 'controller');
+                $r->addRoute('GET', '/{domainId:\\w+}/{resource:account}/{resourceId:\\w+}', 'controller');
             });
             
             return new \Middlewares\FastRoute($dispatcher);
