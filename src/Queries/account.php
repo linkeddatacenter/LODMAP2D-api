@@ -24,7 +24,7 @@ WHERE {
 	?account bgo:accountId  ?accountId ; bgo:amount ?amount .
 	FILTER( ?accountId = "<?php echo $resourceId;?>" )
 	
-	<?php if ($domainId) echo "?domain bgo:domainId \"$domainId\"; bgo:hasAccount \"$resourceId\" . ";?>
+	<?php if ($domainId) echo "?domain bgo:domainId \"$domainId\"; bgo:hasAccount/bgo:accountId \"$resourceId\" . ";?>
 	
 	OPTIONAL { ?account bgo:title ?title }
     OPTIONAL { ?account bgo:referenceAmount ?referenceAmount }

@@ -1,8 +1,8 @@
 ##
-## Setup LODMAP2D-api development environment
+## Setup LODMAP2D-api system test
 ##
 ## - run a quadstore populated with test reference data
-## - run the built-in php web server on a local mount to serve apis
+## - run latest api image
 ##
 version: '3'
 services:
@@ -11,7 +11,7 @@ services:
   # necessary.
   # but you have  to change LODMAP2D_BACKEND according your configuration
   # and manually loading daple data
-  sdaas:
+  store:
     image: linkeddatacenter/sdaas-ce
     ports:
       - "8080:8080"
@@ -21,14 +21,10 @@ services:
        && /sdaas-stop
        && /sdaas-start --foreground"
     volumes:
-      - ./tests/system:/workspace
-  api:
-    image: composer:1
+      - .:/workspace
+  apiprod:
+    image: linkeddatacenter/lodmap2d-api
     ports:
-      - "8000:8000"
-    command: bash -c "composer install && composer run-script --timeout=0 serve"
+      - "8000:80"
     environment:
-      - LODMAP2D_BACKEND=http://sdaas:8080/sdaas/sparql
-      - LODMAP2D_CACHE_EXPIRE=+1 second
-    volumes:
-      - .:/app
+      - LODMAP2D_BACKEND=http://store:8080/sdaas/sparql

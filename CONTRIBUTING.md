@@ -34,6 +34,14 @@ Before submitting a pull request clean your code and test it
 docker run --rm -ti -v $PWD/.:/app composer composer cs-fix
 docker run --rm -ti -v $PWD/.:/app composer composer test
 docker run --rm -ti -v $PWD/.:/app composer --timeout=0 serve
+<ctrl-c>
+docker build -t linkeddatacenter/lodmap2d-api -f docker/Dockerfile .
+cd tests/system
+docker-compose up -d
+# let the system warmup for abour 30 seconds
+# cleanup browser cache
+# do some smoke test
+docker-compose down
 ```
 
 
@@ -65,7 +73,6 @@ Following environment variables are supported:
 This process generates a new docker images that configure and runs a stand-alone apache server:
 
 ```
-docker build -t linkeddatacenter/lodmap2d-api -f docker/Dockerfile .
 docker login --username=yourhubusername --email=youremail@company.com
 docker tag linkeddatacenter/lodmap2d-api linkeddatacenter/lodmap2d-api:x.y.z
 docker push linkeddatacenter/lodmap2d-api
