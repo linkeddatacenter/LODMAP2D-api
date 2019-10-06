@@ -23,7 +23,7 @@ CONSTRUCT {
     ?breakdownPerspective
     	bgo:title ?titleBreackdownPerspective ;
     	bgo:amountFormatter   ?amountFormatterBreackdownPerspective;
-    	bgo:hasTotalizer   ?totalizerBreackdownPerspective  
+    	bgo:hasTotalizer   ?totalizer  
     .
 	
 	?perspective
@@ -31,6 +31,11 @@ CONSTRUCT {
     	bgo:amountFormatter   ?amountFormatterPerspectve 
     .
     
+	
+    ?totalizer
+        bgo:filteredFormat ?filteredFormat ;
+    	bgo:ratioFormatter ?ratioFormatter
+    .
     
 	?formatter
     	bgo:format ?format  ;
@@ -55,7 +60,11 @@ WHERE {
     OPTIONAL { ?accountView bgo:referenceFormatter ?referenceFormatter }
     OPTIONAL { ?accountView bgo:trendFormatter ?trendFormatter }
     OPTIONAL { ?accountView bgo:hasHistoricalPerspective ?historicalPerspective }
-    OPTIONAL { ?accountView bgo:hasBreakdownPerspective ?breakdownPerspective }
+    OPTIONAL { 
+    	?accountView bgo:hasBreakdownPerspective ?breakdownPerspective 
+    	OPTIONAL { ?breakdownPerspective bgo:hasTotalizer ?totalizer }
+    	OPTIONAL { ?breakdownPerspective bgo:hasTotalizer/bgo:filteredFormat ?filteredFormat }
+    }
 
 	OPTIONAL {
 		?accountView bgo:hasHistoricalPerspective|bgo:hasBreakdownPerspective ?perspective .
@@ -64,15 +73,15 @@ WHERE {
 	}
 	
 	OPTIONAL {
-		?accountView bgo:hasBreakdownPerspective/bgo:hasTotalizerhas ?totalizerBreackdownPerspective 
-	}
-	
-	OPTIONAL {
 		{ ?accountView bgo:amountFormatter|bgo:referenceFormatter|bgo:trendFormatter ?formatter }
 		UNION
 		{ 
 			?accountView bgo:hasHistoricalPerspective|bgo:hasBreakdownPerspective ?perspective .
 			?perspective  bgo:amountFormatter ?formatter
+		}
+		UNION
+		{ 
+			?accountView bgo:hasHistoricalPerspective/bgo:hasTotalizer/bgo:ratioFormatter ?formatter
 		}
     	OPTIONAL { ?formatter bgo:format ?format  }
     	OPTIONAL { ?formatter bgo:scaleFactor ?scaleFactor }
