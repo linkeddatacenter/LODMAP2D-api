@@ -41,7 +41,7 @@ cd tests/system
 docker-compose up -d
 # let the system warm-up for about 30 seconds
 # cleanup browser cache
-# do some smoke test
+# do some smoke test at localhost:29340
 docker-compose down
 ```
 

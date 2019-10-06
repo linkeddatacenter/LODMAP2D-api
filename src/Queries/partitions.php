@@ -96,47 +96,47 @@ CONSTRUCT{
 
 } 
 WHERE {
-	<?php if ($domainId) echo "?domain bgo:domainId \"$domainId\" ; bgo:hasAccount ?account .";?>
+	<?php if ($domainId) {?>
+		?domain bgo:domainId "<?php echo $domainId;?>" ;
+			bgo:hasAccount ?account .
+	<?php } else { ?>
+		FILTER NOT EXISTS { ?domain bgo:domainId [] } .
+	<?php }?>
 	
-	?account
-		bgo:accountId ?accountId ;
-	    bgo:amount ?amount .
-	    
-	OPTIONAL { ?account bgo:title ?title  }
-	OPTIONAL { ?account bgo:referenceAmount ?referenceAmount }
-	OPTIONAL { ?account bgo:description ?description }
-	OPTIONAL { ?account bgo:depiction ?depiction	}
+	?domain bgo:hasTableView|bgo:hasOverview ?accountsView .
 	
+	?domain 
+		bgo:hasTableView  ?tableView ;
+		bgo:hasOverview  ?overview ;
+
 	OPTIONAL {
-    	?domain bgo:hasTableView  ?tableView .
-        OPTIONAL { ?tableView bgo:hasTotalizer ?totalizer }
-        OPTIONAL { ?tableView bgo:hasSearchPane ?searchPane }
-        OPTIONAL { ?tableView bgo:headerTitle ?headerTitle }
-        OPTIONAL { ?tableView bgo:headerAmount ?headerAmount }
-        OPTIONAL { ?tableView bgo:headerTrend ?headerTrend }
-        OPTIONAL { ?tableView bgo:hasSearchPane ?searchPane }
-        OPTIONAL { ?tableView bgo:headerDescription ?headerDescription }
-    }
-    
-    OPTIONAL {     
-        ?domain bgo:hasTableView|bgo:hasOverview  ?accountsView .
+        ?accountsView bgo:hasSearchPane ?searchPane .
+    	OPTIONAL { ?searchPane  bgo:label ?searchPaneLabel }
+	}
+	
+	OPTIONAL {     
         ?accountsView bgo:hasTotalizer ?totalizer
         OPTIONAL { ?totalizer bgo:filteredFormat ?filteredFormat }
     	OPTIONAL { ?totalizer bgo:ratioFormatter ?ratioFormatter }
     }
     
+    OPTIONAL { ?tableView bgo:hasTotalizer ?totalizer }
+    OPTIONAL { ?tableView bgo:hasSearchPane ?searchPane }
+    OPTIONAL { ?tableView bgo:headerTitle ?headerTitle }
+    OPTIONAL { ?tableView bgo:headerAmount ?headerAmount }
+    OPTIONAL { ?tableView bgo:headerTrend ?headerTrend }
+    OPTIONAL { ?tableView bgo:hasSearchPane ?searchPane }
+    OPTIONAL { ?tableView bgo:headerDescription ?headerDescription }
 
-	OPTIONAL {
-    	?domain bgo:hasOverview  ?overview .
-    	OPTIONAL { ?overview bgo:hasTrendColorScheme ?trendColorScheme }
-        OPTIONAL { ?overview bgo:hasTotalizer ?totalizer }
-        OPTIONAL { ?overview bgo:hasTagCloud ?tagCloud }
-        OPTIONAL { ?overview bgo:hasSearchPane ?searchPane }
-        OPTIONAL { ?overview bgo:hasTooltip ?tooltip }
-    }
+
+	OPTIONAL { ?overview bgo:hasTrendColorScheme ?trendColorScheme }
+    OPTIONAL { ?overview bgo:hasTotalizer ?totalizer }
+    OPTIONAL { ?overview bgo:hasTagCloud ?tagCloud }
+    OPTIONAL { ?overview bgo:hasSearchPane ?searchPane }
+    OPTIONAL { ?overview bgo:hasTooltip ?tooltip }
     
 	OPTIONAL {
-    	?domain bgo:hasOverview/bgo:hasPartitions/bgo:hasPartitionList/rdf:rest*/rdf:first ?partition .
+    	?overview bgo:hasPartitions/bgo:hasPartitionList/rdf:rest*/rdf:first ?partition .
         OPTIONAL {  ?partition bgo:withSortOrder ?withSortOrder }
     	OPTIONAL {  ?partition bgo:withSortCriteria ?withSortCriteria }
     	OPTIONAL {  ?partition bgo:withGroupFunction ?withGroupFunction }
@@ -145,7 +145,7 @@ WHERE {
     }
     
 	OPTIONAL {
-		?domain bgo:hasOverview/bgo:hasPartitions/bgo:hasPartitionList/rdf:rest*/rdf:first ?partition .
+		?overview bgo:hasPartitions/bgo:hasPartitionList/rdf:rest*/rdf:first ?partition .
 		?partition bgo:hasAccountSubSet|bgo:hasDefaultAccountSubSet ?subset .
 	    OPTIONAL { ?subset bgo:icon ?subSetIcon }
 	    OPTIONAL { ?subset bgo:depiction ?subSetDepiction }
@@ -161,20 +161,58 @@ WHERE {
 
     
     OPTIONAL {
-    	?domain bgo:hasOverview/bgo:hasTooltip ?tooltip .
+    	?overview bgo:hasTooltip ?tooltip .
 	    OPTIONAL { ?tooltip bgo:amountFormatter ?amountFormatter }
 	    OPTIONAL { ?tooltip bgo:referenceFormatter ?amountFormatter }
 	    OPTIONAL { ?tooltip bgo:trendFormatter ?trendFormatter }
     }
+
+	
+	OPTIONAL {
+    	?overview bgo:hasTrendColorScheme ?trendColorScheme .	
+        OPTIONAL { ?trendColorScheme bgo:title ?trendColorSchemeTitle }
+        OPTIONAL { ?trendColorScheme  bgo:noTrendColor ?noTrendColor }
+        OPTIONAL { ?trendColorScheme bgo:rateTreshold ?rateTreshold }
+    }
+    
+    OPTIONAL {
+    	?overview bgo:hasTrendColorScheme/bgo:rateTreshold ?rateTreshold .
+    	OPTIONAL { ?rateTreshold bgo:rate ?rate }
+    	OPTIONAL { ?rateTreshold bgo:colorId ?colorId }
+    }
+	    
+    
+	OPTIONAL {
+		?overview bgo:hasTagCloud ?tagCloud .
+		?tagCloud bgo:hasTag ?tag .
+		?tag 
+			bgo:label ?tagLabel ;
+			bgo:tagWeight ?tagWeight 
+	}
+
+	
+	?account
+		bgo:accountId ?accountId ;
+	    bgo:amount ?amount .
+	    
+	OPTIONAL { ?account bgo:title ?title  }
+	OPTIONAL { ?account bgo:referenceAmount ?referenceAmount }
+	OPTIONAL { ?account bgo:description ?description }
+	OPTIONAL { ?account bgo:depiction ?depiction	}
+	
+
     
     OPTIONAL {
 		{
-			?domain bgo:hasOverview/bgo:hasTooltip ?tooltip . 
+			?overview bgo:hasTooltip ?tooltip . 
 			?tooltip bgo:amountFormatter|bgo:referenceFormatter|bgo:trendFormatter ?formatter 
 		}
 		UNION
 		{ 
-			?domain bgo:hasTableView|bgo:hasOverview  ?accountsView .
+			?tableView bgo:amountFormatter|bgo:referenceFormatter|bgo:trendFormatter ?formatter 
+		}
+		UNION
+		{ 
         	?accountsView bgo:hasTotalizer/bgo:ratioFormatter ?formatter.
 		}
     	OPTIONAL { ?formatter bgo:format ?format  }
@@ -186,32 +224,5 @@ WHERE {
     	OPTIONAL { ?formatter bgo:moreThanMaxFormat ?moreThanMaxFormat }
     	OPTIONAL { ?formatter bgo:lessThanMinFormat ?moreThanMaxFormat } 
 	}  
-	
-	OPTIONAL {
-    	?domain bgo:hasOverview/bgo:hasTrendColorScheme ?trendColorScheme .	
-        OPTIONAL { ?trendColorScheme bgo:title ?trendColorSchemeTitle }
-        OPTIONAL { ?trendColorScheme  bgo:noTrendColor ?noTrendColor }
-        OPTIONAL { ?trendColorScheme bgo:rateTreshold ?rateTreshold }
-    }
-    
-    OPTIONAL {
-    	?domain bgo:hasOverview/bgo:hasTrendColorScheme/bgo:rateTreshold ?rateTreshold .
-    	OPTIONAL { ?rateTreshold bgo:rate ?rate }
-    	OPTIONAL { ?rateTreshold bgo:colorId ?colorId }
-    }
-	
-	OPTIONAL {
-		?domain bgo:hasTableView|bgo:hasOverview  ?accountsView .
-        ?accountsView bgo:hasSearchPane ?searchPane .
-    	OPTIONAL { ?searchPane  bgo:label ?searchPaneLabel }
-	}
-	
-	OPTIONAL {
-		?domain bgo:hasOverview/bgo:hasTagCloud ?tagCloud .
-		?tagCloud bgo:hasTag ?tag .
-		?tag 
-			bgo:label ?tagLabel ;
-			bgo:tagWeight ?tagWeight 
-	}
 
 }

@@ -62,11 +62,11 @@ let the system warm-up for about 30 seconds and than try APIs from Postman of fr
 
 **Using LODMAP2D-api with LODMAP2D:**
 
-LODMAP2D-api supports out-of-the-box the default LODMAP2D dereferencing rules .
-Just let the environment variable *VUE_APP_LODMAP2D_DATA* pointing to your api server. Try it now:
+LODMAP2D-api supports out-of-the-box the default LODMAP2D docker image .
+Just let the environment variable *LODMAP2D_DATA* pointing to your api server. Try with:
 
 ```
-docker run -d --name app -e VUE_APP_LODMAP2D_DATA=http://localhost:8000/ -p 80:80 linkeddatacenter/lodmap2d
+docker run -d --name app -e LODMAP2D_DATA=http://localhost:8000/ -p 80:80 linkeddatacenter/lodmap2d
 ```
 
 Point your browser to http://localhost/ and enjoy.

@@ -23,6 +23,6 @@ services:
   apiprod:
     image: linkeddatacenter/lodmap2d-api
     ports:
-      - "8000:80"
+      - "29340:80"
     environment:
       - LODMAP2D_BACKEND=http://store:8080/sdaas/sparql

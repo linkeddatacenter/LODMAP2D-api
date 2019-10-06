@@ -4,7 +4,7 @@
 PREFIX bgo: <http://linkeddata.center/lodmap-bgo/v1#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 CONSTRUCT { 
-	?domain a bgo:Domain ;
+	?domain # a bgo:Domain ;
 	 	bgo:title ?title ;
         bgo:description ?description ;
         bgo:abstract ?abstract ;
@@ -55,13 +55,18 @@ CONSTRUCT {
   
 } 
 WHERE {
+	<?php if ($domainId) {?>
+		?domain bgo:domainId "<?php echo $domainId;?>" .
+	<?php } else { ?>
+		FILTER NOT EXISTS { ?domain bgo:domainId [] } .
+	<?php }?>
+	
 	?domain 
 		bgo:hasOverview ?overview ;
 		bgo:hasTableView ?tableView ;
         bgo:hasCredits  ?credits ;
         bgo:hasTerms  ?terms 
     .
-	<?php if ($domainId) echo "?domain bgo:domainId \"$domainId\" .";?>
 	
 	OPTIONAL { ?domain bgo:title ?title }
 	OPTIONAL { ?domain bgo:description ?description }

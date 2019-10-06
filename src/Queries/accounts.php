@@ -43,8 +43,12 @@ CONSTRUCT {
     . 	
 } 
 WHERE {
+	<?php if ($domainId) {?>
+		?domain bgo:domainId "<?php echo $domainId;?>" .
+	<?php } else { ?>
+		FILTER NOT EXISTS { ?domain bgo:domainId [] } .
+	<?php }?>
 	?domain bgo:hasAccountView  ?accountView .
-	<?php if ($domainId) echo "?domain bgo:domainId \"$domainId\" .";?>
 	
 	OPTIONAL { ?accountView bgo:amountFormatter ?amountFormatter }
     OPTIONAL { ?accountView bgo:referenceFormatter ?referenceFormatter }

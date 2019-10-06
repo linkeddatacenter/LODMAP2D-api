@@ -10,7 +10,11 @@ CONSTRUCT {
     	bgo:abstract ?abstract	
 } 
 WHERE {
-	<?php if ($domainId) echo "?domain bgo:domainId \"$domainId\" .";?>
+	<?php if ($domainId) {?>
+		?domain bgo:domainId "<?php echo $domainId;?>" .
+	<?php } else { ?>
+		FILTER NOT EXISTS { ?domain bgo:domainId [] } .
+	<?php }?>
 	?domain bgo:hasTerms ?terms .
 	OPTIONAL { ?terms bgo:icon ?icon }
 	OPTIONAL { ?terms bgo:title ?title }

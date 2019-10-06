@@ -19,7 +19,7 @@ class ApplicationServiceProvider implements ServiceProviderInterface
     public function register(Container $app)
     {
         $app['backend'] = 'http://sdaas:8080/sdaas/sparql'; // Override with LODMAP2D_BACKEND env variable
-        $app['CORS.AllowedOrigins'] = 'http://localhost:8080';                  // Override with LODMAP2D_CORS_ALLOWEDORIGINS env variable
+        $app['CORS.AllowedOrigins'] = '*';                  // Override with LODMAP2D_CORS_ALLOWEDORIGINS env variable
         $app['cache.expire'] = '+1 hour';                   // Override with LODMAP2D_CACHE_EXPIRE env variable
         
        
