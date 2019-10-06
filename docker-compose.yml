@@ -14,7 +14,7 @@ services:
   sdaas:
     image: linkeddatacenter/sdaas-ce
     ports:
-      - "8080:8080"
+      - "8081:8080"
     command: bash -c "
        /sdaas-start
        && sdaas -f  build.sdaas --reboot

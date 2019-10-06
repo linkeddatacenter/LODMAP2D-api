@@ -31,14 +31,15 @@ We kindly ask you to add following sentence to your pull request:
 Before submitting a pull request clean your code and test it
 
 ```
+docker run --rm -ti -v $PWD/.:/app composer composer install
 docker run --rm -ti -v $PWD/.:/app composer composer cs-fix
 docker run --rm -ti -v $PWD/.:/app composer composer test
-docker run --rm -ti -v $PWD/.:/app composer --timeout=0 serve
+docker run --rm -ti -v $PWD/.:/app composer serve
 <ctrl-c>
 docker build -t linkeddatacenter/lodmap2d-api -f docker/Dockerfile .
 cd tests/system
 docker-compose up -d
-# let the system warmup for abour 30 seconds
+# let the system warm-up for about 30 seconds
 # cleanup browser cache
 # do some smoke test
 docker-compose down

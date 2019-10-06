@@ -13,8 +13,6 @@ services:
   # and manually loading daple data
   store:
     image: linkeddatacenter/sdaas-ce
-    ports:
-      - "8080:8080"
     command: bash -c "
        /sdaas-start
        && sdaas -f  build.sdaas --reboot

@@ -35,21 +35,49 @@ If none specified *turtle* is used.
 
 Only UTF8 charset supported.
 
+## Try it with docker
 
-## Using LODMAP2D-api with LODMAP2D
+This process will run and populate a knowledge graph with the  BGO test data and will run an instance of the latest LODMAP2D-api image.
 
-This endpoint supports out-of-the-box the default LODMAP2D dereferencing rules like in this configuration :
+Docker compose required.
 
 ```
-[
-	{ "regexp": "/", "targets": [`${namespace}app.ttl`] },
-	{ "regexp": "/partition/(\\w+)$", "targets": [`${namespace}partitions.ttl`], "isLast": true  },
-	{ "regexp": "/account/(\\w+)$", "targets": [`${namespace}accounts.ttl`,`${namespace}account/$1.ttl`], "isLast": true },
-	{ "regexp": "/(credits|terms)$", "targets": [`${namespace}$1.ttl`], "isLast": true },
-]
+cd tests/system
+docker-compose up -d
 ```
 
-Just define the environment variable *VUE_APP_LODMAP2D_DATA* pointing to your api server.
+let the system warm-up for about 30 seconds and than try APIs from Postman of from your browser:
+
+- http://localhost:8000/app.ttl 
+- http://localhost:8000/partitions.ttl
+- http://localhost:8000/accounts.ttl
+- http://localhost:8000/account/account_1.ttl
+- http://localhost:8000/credits.ttl
+- http://localhost:8000/terms.ttl
+- http://localhost:8000/test/app.ttl
+- http://localhost:8000/test/app.ntriples
+- http://localhost:8000/test/app.json
+- ....
+
+
+**Using LODMAP2D-api with LODMAP2D:**
+
+LODMAP2D-api supports out-of-the-box the default LODMAP2D dereferencing rules .
+Just let the environment variable *VUE_APP_LODMAP2D_DATA* pointing to your api server. Try it now:
+
+```
+docker run -d --name app -e VUE_APP_LODMAP2D_DATA=http://localhost:8000/ -p 80:80 linkeddatacenter/lodmap2d
+```
+
+Point your browser to http://localhost/ and enjoy.
+
+cleanup docker resources:
+
+```
+docker rm -f app
+docker-compose down
+```
+cd ../LOD
 
 ## Developers quick start
 
@@ -58,8 +86,8 @@ The project is shipped with a [Docker](https://docker.com) setup that makes it e
 
 Start all required services running `docker-compose up -d` and wait some seconds to let the knowledge graph platform to warm-up and loading test data...
 
-Docker compose will run the Smart Data as a Service Platform at http://localhost:8080/sdaas
-and will run a simple api endpoint at http://localhost:8000/
+Docker compose will run the Smart Data as a Service Platform at http://localhost:8081/sdaas
+and will run a simple test endpoint at http://localhost:8000/
 
 Cleanup docker resources with  `docker-compose down`
 
