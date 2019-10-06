@@ -22,7 +22,8 @@ CONSTRUCT {
     
     ?breakdownPerspective
     	bgo:title ?titleBreackdownPerspective ;
-    	bgo:amountFormatter   ?amountFormatterBreackdownPerspective 
+    	bgo:amountFormatter   ?amountFormatterBreackdownPerspective;
+    	bgo:hasTotalizer   ?totalizerBreackdownPerspective  
     .
 	
 	?perspective
@@ -60,6 +61,10 @@ WHERE {
 		?accountView bgo:hasHistoricalPerspective|bgo:hasBreakdownPerspective ?perspective .
 		OPTIONAL { ?perspective  bgo:title ?titlePerspective }
 		OPTIONAL { ?perspective  bgo:amountFormatter  ?amountFormatterPerspectve  }
+	}
+	
+	OPTIONAL {
+		?accountView bgo:hasBreakdownPerspective/bgo:hasTotalizerhas ?totalizerBreackdownPerspective 
 	}
 	
 	OPTIONAL {
