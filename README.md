@@ -19,32 +19,36 @@ resource                               | payload
 /terms[.*extension*]                   | LODMAP2D application terms & conditions data 
 
 
-It is also possible to query a subdomain prefixing the resources with the sub domain id, i.e:
+It is also possible to query a subdomain prefixing the resources with the sub domain id, e.g.:
 
-- /*sub_domain_id*/app[.ttl] 
-- /*sub_domain_id*/partitions[.ttl] 
-- /*sub_domain_id*/accounts[.ttl]
-- /*sub_domain_id*/account/*account_id*[.ttl]
-- /*sub_domain_id*/credits[.ttl] 
-- /*sub_domain_id*/terms[.ttl]
+- /*my_domain*/app 
+- /*my_domain*/partitions 
+- /*my_domain*/accounts
+- /*my_domain*/account/*account_id*
+- /*my_domain*/credits 
+- /*my_domain*/terms
 
-If no resources match criteria defined in correspondent src/Queries, an empty RDF graph is returned (i.e. no 404 error)
+If no resources found, an empty RDF graph is returned.
 
 LODMAP2D-api supports HTTP content negotiation and the extensions: ttl, turtle, n3, txt, nt, ntriples, rdf, xml, rdfs, owl, jsonld, json . 
-If none specified *turtle* is used.
+If none specified, *turtle* is used.
 
 Only UTF8 charset supported.
 
-## Try it with docker
+## Quickstart with docker
 
-This process will run and populate a knowledge graph with the  BGO test data and will run an instance of the latest LODMAP2D-api image.
+The project is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized  environment up and running. If you do not already have Docker on your computer, 
+[it's the right time to install it](https://docs.docker.com/install/).
 
-Docker compose required.
 
 ```
-cd tests/system
 docker-compose up -d
 ```
+
+This process will run and populate a knowledge graph with the BGO test data and will run an instance of the latest LODMAP2D-api image:
+
+- the knowledge graph will be available at http://localhost:8081/sdaas
+- a test api endpoint will be available at http://localhost:8000/
 
 let the system warm-up for about 30 seconds and than try APIs from Postman of from your browser:
 
@@ -77,22 +81,10 @@ cleanup docker resources:
 docker rm -f app
 docker-compose down
 ```
-cd ../LOD
 
-## Developers quick start
+## Developers
 
-The project is shipped with a [Docker](https://docker.com) setup that makes it easy to get a containerized  environment up and running. If you do not already have Docker on your computer, 
-[it's the right time to install it](https://docs.docker.com/install/).
-
-Start all required services running `docker-compose up -d` and wait some seconds to let the knowledge graph platform to warm-up and loading test data...
-
-Docker compose will run the Smart Data as a Service Platform at http://localhost:8081/sdaas
-and will run a simple test endpoint at http://localhost:8000/
-
-Cleanup docker resources with  `docker-compose down`
-
-Read the [CONTRIBUTING file](CONTRIBUTING.md) for more info.
-
+See [CONTRIBUTING file](CONTRIBUTING.md) for more info.
 
 ## License
 
