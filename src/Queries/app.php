@@ -5,7 +5,6 @@ PREFIX bgo: <http://linkeddata.center/lodmap-bgo/v1#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 CONSTRUCT { 
 	?domain # a bgo:Domain ;
-	 	bgo:title ?title ;
         bgo:description ?description ;
         bgo:abstract ?abstract ;
         bgo:hasSocialSharing  ?socialSharing ;
@@ -16,42 +15,27 @@ CONSTRUCT {
         bgo:hasCopyrigth ?copyright ;       
         ?hasMenu ?menu 
     .
-    
-    
+     
     # Menu construction
     ?domain ?hasMenu ?menu .
-    ?menu bgo:withCustomMenuItems ?menuItemsList .
-	?menuItemsListRest rdf:first ?menuItem ; rdf:rest ?menuItemsListTail .
-    ?menuItem bgo:icon ?menuItemIcon ;
-    	bgo:label ?menuItemLabel ;
-    	bgo:title ?menuItemTitle ;
-    	bgo:link ?menuItemLink .
-    	
-    	
-    # Minimal view data for menu building
-    ?view # i.e. overview, table, credits, term
-		bgo:icon ?viewIcon ; 
-		bgo:label ?viewLabel ; 
-		bgo:title ?viewTitle .
+    ?menu bgo:withCustomMenuItem ?menuItem .
+    
+    ?menuItem 
+    	bgo:link ?menuItemLink 
+    .
     
     ?overview 
     	bgo:hasPartitions ?partitions . 
+    	
     ?partitions 
-    	bgo:icon ?partitionsIcon ;
-    	bgo:label ?partitionsLabel ;
-    	bgo:title ?partitionsTitle ; 
-    	bgo:hasPartitionList ?partitionList 
+    	bgo:hasPartition ?partition
     . 
-    # manage partition list	
-	?partitionListRest 
-		rdf:first ?partition ; 
-		rdf:rest ?partitionListTail 
-	.
-    ?partition 
-    	bgo:icon ?partitionIcon ;
-    	bgo:label ?partitionLabel ;
-    	bgo:title ?partitionTitle 
-    .
+    
+    ?bgoThings 
+        bgo:icon ?icon ;
+    	bgo:label ?label ;
+    	bgo:title ?title
+    . 
   
 } 
 WHERE {
@@ -67,8 +51,26 @@ WHERE {
         bgo:hasCredits  ?credits ;
         bgo:hasTerms  ?terms 
     .
+    
+    {
+    	{ ?domain bgo:hasOverview|bgo:hasTableView|bgo:hasCredits|bgo:hasTerms ?bgoThings }
+    	UNION
+    	{ ?overview bgo:hasPartitions ?bgoThings }
+    	UNION
+    	{ ?overview bgo:hasPartitions/bgo:hasPartition ?bgoThings }
+    	UNION
+    	{ 
+    		?domain bgo:hasNavigationMenu|bgo:hasOptionMenu|bgo:hasFooterMenu ?menu .
+    		?menu  bgo:withCustomMenuItem ?bgoThings
+    	}
+    
+        OPTIONAL { ?bgoThings bgo:icon ?icon }
+     	OPTIONAL { ?bgoThings bgo:label ?label }
+     	OPTIONAL { ?bgoThings bgo:title ?title }
+    
+    }
+    
 	
-	OPTIONAL { ?domain bgo:title ?title }
 	OPTIONAL { ?domain bgo:description ?description }
 	OPTIONAL { ?domain bgo:abstract ?abstract }
 	OPTIONAL { ?domain bgo:hasSocialSharing  ?socialSharing }
@@ -77,8 +79,7 @@ WHERE {
 	
 	# Menu construction
 	# See https://stackoverflow.com/questions/44221975/how-to-write-a-sparql-construct-query-that-returns-an-rdf-list
-	OPTIONAL { 
-		
+	OPTIONAL { 		
     	VALUES ?hasMenu {
     		bgo:hasNavigationMenu
     		bgo:hasOptionMenu
@@ -86,19 +87,11 @@ WHERE {
     	}
     	
 		?domain ?hasMenu ?menu .
-		?menu bgo:withCustomMenuItems ?menuItemsList .
-		?menuItemsList rdf:rest* ?menuItemsListRest .
-		?menuItemsListRest rdf:first ?menuItem ; rdf:rest ?menuItemsListTail .
+		?menu bgo:withCustomMenuItem ?menuItem .
 		
-     	OPTIONAL { ?menuItem bgo:icon ?menuItemIcon }
-     	OPTIONAL { ?menuItem bgo:label ?menuItemLabel }
-     	OPTIONAL { ?menuItem bgo:title ?menuItemTitle }
      	OPTIONAL { ?menuItem bgo:link ?menuItemLink }
      }
      
-    OPTIONAL { ?overview bgo:icon ?overviewIcon }
-    OPTIONAL { ?overview bgo:label ?overviewLabel }
-    OPTIONAL { ?overview bgo:title ?overviewTitle } 
    	OPTIONAL { ?overview bgo:hasPartitions ?partitions } 
 
     
@@ -106,40 +99,10 @@ WHERE {
     # Minimal partitions  data for menu building    
     OPTIONAL { 
     	?overview bgo:hasPartitions ?partitions .
-        OPTIONAL { ?partitions bgo:icon ?partitionsIcon }
-        OPTIONAL { ?partitions bgo:label ?partitionsLabel }
-        OPTIONAL { ?partitions bgo:title ?partitionsTitle } 
-       	OPTIONAL { ?partitions bgo:hasPartitionList ?partitionList } 
+       	OPTIONAL { 
+       		?partitions bgo:hasPartition ?partition 
+       	} 
     }  
     
-    # Minimal partition  data for menu building    
-    OPTIONAL { 
-    	?overview bgo:hasPartitions/bgo:hasPartitionList ?partitionList .
-    	
-    	?partitionList rdf:rest* ?partitionListRest .
-		?partitionListRest rdf:first ?partition ; rdf:rest ?partitionListTail .
-		
-     	OPTIONAL { ?partition bgo:icon ?partitionIcon }
-     	OPTIONAL { ?partition bgo:label ?partitionLabel }
-     	OPTIONAL { ?partition bgo:title ?partitionTitle }	
-    
-    }  
-    
-    
-    # Minimal data for other view for menu building
-     OPTIONAL {
-         VALUES ?hasViews {
-         	bgo:hasOverview
-         	bgo:hasTableview
-         	bgo:hasCredits
-         	bgo:hasTerms
-         }     
-     	
-     	?domain ?hasView ?view .
-     	OPTIONAL { ?view bgo:icon ?viewIcon }
-     	OPTIONAL { ?view bgo:label ?viewLabel }
-     	OPTIONAL { ?view bgo:title ?viewTitle }
-     }
 
-     
 }
