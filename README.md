@@ -17,6 +17,7 @@ resource                               | payload
 /account/*account_id*[.*extension*]    | LODMAP2D data for a *account_id* account. 
 /credits[.*extension*]                 | LODMAP2D application credits data 
 /terms[.*extension*]                   | LODMAP2D application terms & conditions data 
+/data[.extension]					   | returns all LODMAP2D data
 
 
 It is also possible to query a subdomain prefixing the resources with the sub domain id, e.g.:
@@ -58,6 +59,7 @@ let the system warm-up for about 30 seconds and than try APIs from Postman of fr
 - http://localhost:8000/account/account_1.ttl
 - http://localhost:8000/credits.ttl
 - http://localhost:8000/terms.ttl
+- http://localhost:8000/data.ttl
 - http://localhost:8000/test/app.ttl
 - http://localhost:8000/test/app.ntriples
 - http://localhost:8000/test/app.json
