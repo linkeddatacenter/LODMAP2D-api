@@ -74,7 +74,7 @@ Following environment variables are supported:
 This process generates a new docker images that configure and runs a stand-alone apache server:
 
 ```
-docker login --username=yourhubusername --email=youremail@company.com
+docker build -t linkeddatacenter/lodmap2d-api -f docker/Dockerfile .
 docker tag linkeddatacenter/lodmap2d-api linkeddatacenter/lodmap2d-api:x.y.z
 docker push linkeddatacenter/lodmap2d-api
 ```
