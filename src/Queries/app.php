@@ -5,11 +5,12 @@ PREFIX bgo: <http://linkeddata.center/lodmap-bgo/v1#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 CONSTRUCT { 
 	?domain # a bgo:Domain ;
+		bgo:title ?domainTitle ;
         bgo:description ?description ;
         bgo:abstract ?abstract ;
         bgo:hasSocialSharing  ?socialSharing ;
         bgo:hasOverview  ?overview ;
-        bgo:hasTableview  ?tableView ;
+        bgo:hasTableView  ?tableView ;
         bgo:hasCredits  ?credits ;
         bgo:hasTerms  ?terms ;
         bgo:hasCopyrigth ?copyright ;       
@@ -52,25 +53,23 @@ WHERE {
         bgo:hasTerms  ?terms 
     .
     
-    {
-    	{ ?domain bgo:hasOverview|bgo:hasTableView|bgo:hasCredits|bgo:hasTerms ?bgoThings }
-    	UNION
-    	{ ?overview bgo:hasPartitions ?bgoThings }
-    	UNION
-    	{ ?overview bgo:hasPartitions/bgo:hasPartition ?bgoThings }
-    	UNION
-    	{ 
-    		?domain bgo:hasNavigationMenu|bgo:hasOptionMenu|bgo:hasFooterMenu ?menu .
-    		?menu  bgo:withCustomMenuItem ?bgoThings
-    	}
-    
-        OPTIONAL { ?bgoThings bgo:icon ?icon }
-     	OPTIONAL { ?bgoThings bgo:label ?label }
-     	OPTIONAL { ?bgoThings bgo:title ?title }
-    
-    }
-    
+	{ ?domain bgo:hasOverview|bgo:hasTableView|bgo:hasCredits|bgo:hasTerms ?bgoThings }
+	UNION
+	{ ?overview bgo:hasPartitions ?bgoThings }
+	UNION
+	{ ?overview bgo:hasPartitions/bgo:hasPartition ?bgoThings }
+	UNION
+	{ 
+		?domain bgo:hasNavigationMenu|bgo:hasOptionMenu|bgo:hasFooterMenu ?menu .
+		?menu  bgo:withCustomMenuItem ?bgoThings
+	}
+
+    OPTIONAL { ?bgoThings bgo:icon ?icon }
+ 	OPTIONAL { ?bgoThings bgo:label ?label }
+ 	OPTIONAL { ?bgoThings bgo:title ?title }
 	
+	
+	OPTIONAL { ?domain bgo:title ?domainTitle }
 	OPTIONAL { ?domain bgo:description ?description }
 	OPTIONAL { ?domain bgo:abstract ?abstract }
 	OPTIONAL { ?domain bgo:hasSocialSharing  ?socialSharing }

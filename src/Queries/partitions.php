@@ -34,19 +34,24 @@ CONSTRUCT{
         bgo:hasTooltip ?tooltip 
     .
     
+    ?partitions bgo:hasPartition ?partition .
+    
     # Icon, label and title metadata are extracted by app.php
     ?partition
+    	bgo:partitionId ?partitionId ;
     	bgo:withSortOrder ?withSortOrder ;
-    	bgo:withSortCriteria ?withSortCriteria;
+    	bgo:withSortCriteria ?withSortCriteria ;
     	bgo:withGroupFunction ?withGroupFunction ;    
-        bgo:hasAccountSubSet ?accountSubset ;
+        bgo:hasAccountSubSet ?accountSubSet ;
         bgo:hasDefaultAccountSubSet ?defaultAccountSubSet
     .
     
-    ?withGroupFunction bgo:hasTotalizer ?groupTotalizer .
+    ?withGroupFunction 
+    	a ?groupFunctionType ;
+    	bgo:hasTotalizer ?groupTotalizer .
     
     
-    ?subset
+    ?accountSubSet 
 	    bgo:icon ?subSetIcon ;
 	    bgo:depiction ?subSetDepiction ;
 	    bgo:label ?subSetLabel ;
@@ -112,7 +117,7 @@ WHERE {
 	
 	?domain 
 		bgo:hasTableView  ?tableView ;
-		bgo:hasOverview  ?overview ;
+		bgo:hasOverview  ?overview .
 
 	OPTIONAL {
         ?accountsView bgo:hasSearchPane ?searchPane .
@@ -145,13 +150,15 @@ WHERE {
     
 	OPTIONAL {
     	?overview bgo:hasPartitions/bgo:hasPartition ?partition .
+    	?partition bgo:partitionId ?partitionId .
         OPTIONAL {  ?partition bgo:withSortOrder ?withSortOrder }
     	OPTIONAL {  ?partition bgo:withSortCriteria ?withSortCriteria }
     	OPTIONAL {  
     		?partition bgo:withGroupFunction ?withGroupFunction 
-    		OPTIONAL { ?withGroupFunction  bgo:hasTotalizer ?groupTotalizer }
+    		OPTIONAL { ?withGroupFunction  bgo:hasTotalizer ?groupTotalizer }		
+    		OPTIONAL { ?withGroupFunction  a ?groupFunctionType }
     	}
-        OPTIONAL {  ?partition bgo:hasAccountSubSet ?accountSubset }
+        OPTIONAL {  ?partition bgo:hasAccountSubSet ?accountSubSet }
         OPTIONAL {  ?partition bgo:hasDefaultAccountSubSet ?defaultAccountSubSet }
     }
     
@@ -166,9 +173,7 @@ WHERE {
 	    OPTIONAL { ?subset bgo:abstract ?subSetAbstract }
 	    OPTIONAL { 
 	    	?subset bgo:hasAccount ?subsetAccount .
-	    	<?php if ($domainId) {
-    echo "?domain bgo:hasAccount ?subsetAccount .";
-}?>
+	    	<?php if ($domainId) echo "?domain bgo:hasAccount ?subsetAccount ."; ?>
 	    }
 	}
 
@@ -204,42 +209,45 @@ WHERE {
 	}
 
 	
-	?account
-		bgo:accountId ?accountId ;
-	    bgo:amount ?amount .
-	    
-	OPTIONAL { ?account bgo:title ?title  }
-	OPTIONAL { ?account bgo:referenceAmount ?referenceAmount }
-	OPTIONAL { ?account bgo:description ?description }
-	OPTIONAL { ?account bgo:depiction ?depiction	}
+	{
+      SELECT ?account ?accountId ?amount ?title  ?referenceAmount ?description ?depiction WHERE {
+        ?account
+            bgo:accountId ?accountId ;
+            bgo:amount ?amount .
+
+        OPTIONAL { ?account bgo:title ?title  }
+        OPTIONAL { ?account bgo:referenceAmount ?referenceAmount }
+        OPTIONAL { ?account bgo:description ?description }
+        OPTIONAL { ?account bgo:depiction ?depiction	}
+      }
+    }
 	
 
-    
     OPTIONAL {
-		{
-			?overview bgo:hasTooltip ?tooltip . 
-			?tooltip bgo:amountFormatter|bgo:referenceFormatter|bgo:trendFormatter ?formatter 
-		}
-		UNION
-		{ 
-			?tableView bgo:amountFormatter|bgo:referenceFormatter|bgo:trendFormatter ?formatter 
-		}
-		UNION
-		{ 
+    	{
+    		?overview bgo:hasTooltip ?tooltip . 
+    		?tooltip bgo:amountFormatter|bgo:referenceFormatter|bgo:trendFormatter ?formatter 
+    	}
+    	UNION
+    	{ 
+    		?tableView bgo:amountFormatter|bgo:referenceFormatter|bgo:trendFormatter ?formatter 
+    	}
+    	UNION
+    	{ 
         	?accountsView bgo:hasTotalizer/bgo:ratioFormatter ?formatter.
-		}
-		UNION
-		{ 
+    	}
+    	UNION
+    	{ 
         	?partition bgo:withGroupFunction/bgo:hasTotalizer/bgo:ratioFormatter ?formatter.
-		}
-		UNION
-		{ 
+    	}
+    	UNION
+    	{ 
         	?accountsView bgo:hasTotalizer ?formatter.
-		}
-		UNION
-		{ 
+    	}
+    	UNION
+    	{ 
         	?partition bgo:withGroupFunction/bgo:hasTotalizer ?formatter.
-		}
+    	}
     	OPTIONAL { ?formatter bgo:format ?format  }
     	OPTIONAL { ?formatter bgo:scaleFactor ?scaleFactor }
     	OPTIONAL { ?formatter bgo:precision ?precision }
@@ -248,6 +256,6 @@ WHERE {
     	OPTIONAL { ?formatter bgo:nanFormat ?nanFormat }
     	OPTIONAL { ?formatter bgo:moreThanMaxFormat ?moreThanMaxFormat }
     	OPTIONAL { ?formatter bgo:lessThanMinFormat ?moreThanMaxFormat } 
-	}  
+	}
 
 }

@@ -72,7 +72,7 @@ LODMAP2D-api supports out-of-the-box the default LODMAP2D docker image .
 Just let the environment variable *LODMAP2D_DATA* pointing to your api server. Try with:
 
 ```
-docker run -d --name app -e LODMAP2D_DATA=http://localhost:8000/ -p 80:80 linkeddatacenter/lodmap2d
+docker run -d --name app -e LODMAP2D_DATA=http://localhost:8000/ -p 8080:80 linkeddatacenter/lodmap2d
 ```
 
 Point your browser to http://localhost/ and enjoy.
