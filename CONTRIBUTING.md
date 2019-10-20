@@ -54,18 +54,11 @@ The whole source code fully based on PSR standards ans is less than 30 PHP state
 Out-of-the-box This project provides:
 
 - LODMAP2D interface to a SPARQL service enpoint
-- ful HTTP content negotiation
+- full HTTP content negotiation
 - Cross-Origin Resource Sharing (CORS) support
 - gzip response compression
 - http cache magement
 - fast routing with URI template
-
-
-Following environment variables are supported:
-
-- **LODMAP2D_BACKEND** containing the SPARQL service endpoint (defaults to http://sdaas:8080/sdaas/sparql )
-- **LODMAP2D_CORS_ALLOWEDORIGINS** that defaults to *
-- **LODMAP2D_CACHE_EXPIRE** resource expiration time. Defaults to '+1 hour', accepts  any valid [DateTime string](https://www.php.net/manual/en/datetime.formats.php)
 
 
 

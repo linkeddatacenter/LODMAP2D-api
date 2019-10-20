@@ -121,12 +121,14 @@ class ApplicationServiceProvider implements ServiceProviderInterface
 
 
         // Routes http requests
-        $app['fastRoute'] = function () {
-            $dispatcher = \FastRoute\simpleDispatcher(function (\FastRoute\RouteCollector $r) {
-                $r->addRoute('GET', '/{resource:app|credits|terms|partitions|accounts|data}', 'controller');
-                $r->addRoute('GET', '/{resource:account}/{resourceId:\\w+}', 'controller');
-                $r->addRoute('GET', '/{domainId:\\w+}/{resource:app|credits|terms|partitions|accounts}', 'controller');
-                $r->addRoute('GET', '/{domainId:\\w+}/{resource:account}/{resourceId:\\w+}', 'controller');
+        $app['fastRoute'] = function () {          
+            $dispatcher = \FastRoute\simpleDispatcher(function (\FastRoute\RouteCollector $r) {        
+                $singleAction = 'app|credits|terms|table-view|partitions|accounts-index|account-view|bgo';
+                $actionOnId = 'account';
+                $r->addRoute('GET', "/{resource:$singleAction}", 'controller');
+                $r->addRoute('GET', "/{resource:$actionOnId}/{resourceId:\\w+}", 'controller');
+                $r->addRoute('GET', "/{domainId:\\w+}/{resource:$singleAction}", 'controller');
+                $r->addRoute('GET', "/{domainId:\\w+}/{resource:$actionOnId}/{resourceId:\\w+}", 'controller');
             });
             
             return new \Middlewares\FastRoute($dispatcher);

@@ -5,13 +5,7 @@
 PREFIX bgo: <http://linkeddata.center/lodmap-bgo/v1#> 
 CONSTRUCT {
 	?account 
-		bgo:accountId ?accountId ;
-	    bgo:amount ?amount ;
-	    bgo:referenceAmount ?referenceAmount ;
-	    bgo:title ?title ;
-	    bgo:description ?description ;
 	    bgo:abstract ?abstract ;
-	    bgo:depiction ?depiction ;
 	    bgo:versionLabel ?versionLabel ;
 	    bgo:hasHistoryRec ?historyRec ;
 	    bgo:hasBreakdown ?breakdown 

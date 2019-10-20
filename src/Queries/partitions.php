@@ -4,26 +4,6 @@
 PREFIX bgo: <http://linkeddata.center/lodmap-bgo/v1#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 CONSTRUCT{
-	?account 
-		bgo:accountId ?accountId ;
-	    bgo:amount ?amount ;
-	    bgo:title ?title  ;
-	    bgo:referenceAmount ?referenceAmount ;
-	    bgo:description ?description ;
-	    bgo:depiction ?depiction	
-	.
-		
-    ?tableView 
-        bgo:hasTotalizer ?tableTotalizer ;
-        bgo:hasSearchPane ?searchPane ;
-        bgo:headerTitle ?headerTitle ;
-        bgo:headerAmount ?headerAmount ;
-        bgo:headerTrend ?headerTrend ;
-        bgo:hasSearchPane ?searchPane ;
-        bgo:headerDescription ?headerDescription 
-    .
-    
-    
 	# Icon, label and title metadata are extracted by app.php
 	# Partition list extracted by app.php
     ?overview 
@@ -112,41 +92,29 @@ WHERE {
 	<?php } else { ?>
 		FILTER NOT EXISTS { ?domain bgo:domainId [] } .
 	<?php }?>
+
+	?domain bgo:hasOverview ?overview .
 	
-	?domain bgo:hasTableView|bgo:hasOverview ?accountsView .
-	
-	?domain 
-		bgo:hasTableView  ?tableView ;
-		bgo:hasOverview  ?overview .
+	OPTIONAL { ?overview bgo:hasTrendColorScheme ?trendColorScheme }
+    OPTIONAL { ?overview bgo:hasTotalizer ?overviewTotalizer }
+    OPTIONAL { ?overview bgo:hasTagCloud ?tagCloud }
+    OPTIONAL { ?overview bgo:hasSearchPane ?searchPane }
+    OPTIONAL { ?overview bgo:hasTooltip ?tooltip }
 
 	OPTIONAL {
-        ?accountsView bgo:hasSearchPane ?searchPane .
+        ?overview bgo:hasSearchPane ?searchPane .
     	OPTIONAL { ?searchPane  bgo:label ?searchPaneLabel }
 	}
 	
 	OPTIONAL {     
-        { ?accountsView bgo:hasTotalizer ?totalizer }
+        { ?overview bgo:hasTotalizer ?totalizer }
         UNION
         { ?overview bgo:hasPartitions/bgo:hasPartition/bgo:withGroupFunction/bgo:hasTotalizer ?totalizer }
         
         OPTIONAL { ?totalizer bgo:filteredFormat ?filteredFormat }
     	OPTIONAL { ?totalizer bgo:ratioFormatter ?ratioFormatter }
     }
-    
-    OPTIONAL { ?tableView bgo:hasTotalizer ?tableTotalizer }
-    OPTIONAL { ?tableView bgo:hasSearchPane ?searchPane }
-    OPTIONAL { ?tableView bgo:headerTitle ?headerTitle }
-    OPTIONAL { ?tableView bgo:headerAmount ?headerAmount }
-    OPTIONAL { ?tableView bgo:headerTrend ?headerTrend }
-    OPTIONAL { ?tableView bgo:hasSearchPane ?searchPane }
-    OPTIONAL { ?tableView bgo:headerDescription ?headerDescription }
-
-
-	OPTIONAL { ?overview bgo:hasTrendColorScheme ?trendColorScheme }
-    OPTIONAL { ?overview bgo:hasTotalizer ?overviewTotalizer }
-    OPTIONAL { ?overview bgo:hasTagCloud ?tagCloud }
-    OPTIONAL { ?overview bgo:hasSearchPane ?searchPane }
-    OPTIONAL { ?overview bgo:hasTooltip ?tooltip }
+ 
     
 	OPTIONAL {
     	?overview bgo:hasPartitions/bgo:hasPartition ?partition .
@@ -208,21 +176,6 @@ WHERE {
 			bgo:tagWeight ?tagWeight 
 	}
 
-	
-	{
-      SELECT ?account ?accountId ?amount ?title  ?referenceAmount ?description ?depiction WHERE {
-        ?account
-            bgo:accountId ?accountId ;
-            bgo:amount ?amount .
-
-        OPTIONAL { ?account bgo:title ?title  }
-        OPTIONAL { ?account bgo:referenceAmount ?referenceAmount }
-        OPTIONAL { ?account bgo:description ?description }
-        OPTIONAL { ?account bgo:depiction ?depiction	}
-      }
-    }
-	
-
     OPTIONAL {
     	{
     		?overview bgo:hasTooltip ?tooltip . 
@@ -230,22 +183,20 @@ WHERE {
     	}
     	UNION
     	{ 
-    		?tableView bgo:amountFormatter|bgo:referenceFormatter|bgo:trendFormatter ?formatter 
+        	?overview bgo:hasTotalizer/bgo:ratioFormatter ?formatter.
     	}
     	UNION
     	{ 
-        	?accountsView bgo:hasTotalizer/bgo:ratioFormatter ?formatter.
-    	}
-    	UNION
-    	{ 
+    		?overview bgo:hasPartitions/bgo:hasPartition ?partition .
         	?partition bgo:withGroupFunction/bgo:hasTotalizer/bgo:ratioFormatter ?formatter.
     	}
     	UNION
     	{ 
-        	?accountsView bgo:hasTotalizer ?formatter.
+        	?overview bgo:hasTotalizer ?formatter.
     	}
     	UNION
     	{ 
+    		?overview bgo:hasPartitions/bgo:hasPartition ?partition .
         	?partition bgo:withGroupFunction/bgo:hasTotalizer ?formatter.
     	}
     	OPTIONAL { ?formatter bgo:format ?format  }
