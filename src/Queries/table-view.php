@@ -6,6 +6,9 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 CONSTRUCT{
 		
     ?tableView 
+        bgo:amountFormatter ?amountFormatter ;
+        bgo:referenceFormatter ?referenceFormatter ;
+        bgo:trendFormatter ?trendFormatter ;
         bgo:hasTotalizer ?totalizer ;
         bgo:hasSearchPane ?searchPane ;
         bgo:headerTitle ?headerTitle ;
@@ -50,6 +53,9 @@ WHERE {
     OPTIONAL { ?tableView bgo:headerTrend ?headerTrend }
     OPTIONAL { ?tableView bgo:hasSearchPane ?searchPane }
     OPTIONAL { ?tableView bgo:headerDescription ?headerDescription }
+    OPTIONAL { ?tableView bgo:amountFormatter ?amountFormatter }
+    OPTIONAL { ?tableView bgo:referenceFormatter ?referenceFormatter }
+    OPTIONAL { ?tableView bgo:trendFormatter ?trendFormatter }
 
 	OPTIONAL {
         ?tableView bgo:hasSearchPane ?searchPane .
@@ -64,7 +70,7 @@ WHERE {
     
 
     OPTIONAL {
-    	{ ?tableView bgo:hasTotalizer ?formatter }
+    	{ ?tableView bgo:hasTotalizer|bgo:amountFormatter|bgo:referenceFormatter|bgo:trendFormatter ?formatter }
     	UNION
     	{ ?tableView bgo:hasTotalizer/bgo:ratioFormatter ?formatter }
     	OPTIONAL { ?formatter bgo:format ?format  }
