@@ -13,7 +13,8 @@ resource                                             | payload
 ---------------------------------------------------- | -------------------
 /[*domain_id*/]app[.*extension*]                     | common LODMAP2D application layout data.
 /[*domain_id*/]table-view[.*extension*]              | LODMAP2D tableview metadata
-/[*domain_id*/]partitions[.*extension*]              | LODMAP2D data for all partition views with account index
+/[*domain_id*/]overview[.*extension*]                | LODMAP2D data for overview
+/[*domain_id*/]partitions[.*extension*]              | LODMAP2D data for all partition views 
 /[*domain_id*/]account-view[.*extension*]            | LODMAP2D data for AccountView and related perspective
 /[*domain_id*/]accounts-index[.*extension*]          | LODMAP2D data for all account
 /[*domain_id*/]account/*account_id*[.*extension*]    | LODMAP2D data for a *account_id* account. 
@@ -28,7 +29,7 @@ These APIs are designed to support this LODMAP2d config rules:
     { "regexp": ".*", "targets": [LODMAP2D_DATA + "app.ttl"] },
     { "regexp": ".*/(table|partition|account).*$", "targets": [LODMAP2D_DATA + "accounts-index.ttl"] },
     { "regexp": ".*/table$", "targets": [LODMAP2D_DATA + "table-view.ttl"], "isLast": true },
-    { "regexp": ".*/partition/(\\w+)$", "targets": [LODMAP2D_DATA + "partitions.ttl"], "isLast": true },
+    { "regexp": ".*/partition/(\\w+)$", "targets": [LODMAP2D_DATA + "overview.ttl", LODMAP2D_DATA + "partitions.ttl"], "isLast": true },
     { "regexp": ".*/account/(\\w+)$", "targets": [LODMAP2D_DATA + "account-view.ttl", LODMAP2D_DATA + "account/$1.ttl"], "isLast": true },
     { "regexp": ".*/(credits|terms)$", "targets": [LODMAP2D_DATA + "$1.ttl"], "isLast": true }
  ]

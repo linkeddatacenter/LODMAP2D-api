@@ -123,7 +123,7 @@ class ApplicationServiceProvider implements ServiceProviderInterface
         // Routes http requests
         $app['fastRoute'] = function () {          
             $dispatcher = \FastRoute\simpleDispatcher(function (\FastRoute\RouteCollector $r) {        
-                $singleAction = 'app|credits|terms|table-view|partitions|accounts-index|account-view|bgo';
+                $singleAction = 'app|credits|terms|table-view|overview|partitions|accounts-index|account-view|bgo';
                 $actionOnId = 'account';
                 $r->addRoute('GET', "/{resource:$singleAction}", 'controller');
                 $r->addRoute('GET', "/{resource:$actionOnId}/{resourceId:\\w+}", 'controller');
