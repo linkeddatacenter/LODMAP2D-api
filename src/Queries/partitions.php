@@ -61,7 +61,6 @@ PREFIX bgo: <http://linkeddata.center/lodmap-bgo/v1#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 CONSTRUCT{
 
-    # Icon, label and title metadata are extracted by app.php
     ?partition
     	bgo:withSortOrder ?withSortOrder ;
     	bgo:withSortCriteria ?withSortCriteria ;
@@ -74,8 +73,12 @@ CONSTRUCT{
     	a ?groupFunctionType ;
     	bgo:hasTotalizer ?groupTotalizer .
     
-    
-    ?accountSubSet 
+    ?groupTotalizer
+        bgo:filteredFormat ?filteredFormat ;
+    	bgo:ratioFormatter ?ratioFormatter
+    .
+        
+    ?subset 
 	    bgo:icon ?subSetIcon ;
 	    bgo:depiction ?subSetDepiction ;
 	    bgo:label ?subSetLabel ;
@@ -85,11 +88,6 @@ CONSTRUCT{
 	    bgo:hasAccount ?subsetAccount 
 	.
     
-    
-    ?groupTotalizer
-        bgo:filteredFormat ?filteredFormat ;
-    	bgo:ratioFormatter ?ratioFormatter
-    .
     
     ?formatter
     	bgo:format ?format ;
