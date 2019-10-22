@@ -174,6 +174,6 @@ WHERE {
     	OPTIONAL { ?formatter bgo:minValue ?minValue } 
     	OPTIONAL { ?formatter bgo:nanFormat ?nanFormat }
     	OPTIONAL { ?formatter bgo:moreThanMaxFormat ?moreThanMaxFormat }
-    	OPTIONAL { ?formatter bgo:lessThanMinFormat ?moreThanMaxFormat } 
+    	OPTIONAL { ?formatter bgo:lessThanMinFormat ?lessThanMaxFormat } 
 	}
 }
