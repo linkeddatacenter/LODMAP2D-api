@@ -45,7 +45,7 @@ CONSTRUCT {
     	bgo:minValue ?minValue ; 
     	bgo:nanFormat ?nanFormat ;
     	bgo:moreThanMaxFormat ?moreThanMaxFormat ;
-    	bgo:lessThanMinFormat ?moreThanMaxFormat
+    	bgo:lessThanMinFormat ?lessThanMaxFormat
     . 	
 } 
 WHERE {
