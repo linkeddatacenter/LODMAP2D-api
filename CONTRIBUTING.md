@@ -34,8 +34,6 @@ Before submitting a pull request clean your code and test it
 docker run --rm -ti -v $PWD/.:/app composer composer install
 docker run --rm -ti -v $PWD/.:/app composer composer cs-fix
 docker run --rm -ti -v $PWD/.:/app composer composer test
-docker run --rm -ti -v $PWD/.:/app composer serve
-<ctrl-c>
 docker build -t linkeddatacenter/lodmap2d-api -f docker/Dockerfile .
 cd tests/system
 docker-compose up -d

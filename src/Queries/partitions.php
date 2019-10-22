@@ -137,7 +137,9 @@ WHERE {
 	    OPTIONAL { ?subset bgo:abstract ?subSetAbstract }
 	    OPTIONAL { 
 	    	?subset bgo:hasAccount ?subsetAccount .
-	    	<?php if ($domainId) echo "?domain bgo:hasAccount ?subsetAccount ."; ?>
+	    	<?php if ($domainId) {
+    echo "?domain bgo:hasAccount ?subsetAccount .";
+} ?>
 	    }
 	}
 
