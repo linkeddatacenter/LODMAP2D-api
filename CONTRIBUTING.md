@@ -35,12 +35,25 @@ docker run --rm -ti -v $PWD/.:/app composer composer install
 docker run --rm -ti -v $PWD/.:/app composer composer cs-fix
 docker run --rm -ti -v $PWD/.:/app composer composer test
 docker build -t linkeddatacenter/lodmap2d-api -f docker/Dockerfile .
-cd tests/system
-docker-compose up -d
+docker-compose -f tests/system/docker-compose.yml up -d
 # let the system warm-up for about 30 seconds
 # cleanup browser cache
 # do some smoke test at localhost:29340
-docker-compose down
+curl http://localhost:29340/app.ttl ; `
+curl http://localhost:29340/partitions.ttl ; `
+curl http://localhost:29340/account-view.ttl ; `
+curl http://localhost:29340/accounts-index.ttl ; `
+curl http://localhost:29340/account/account_1.ttl ; `
+curl http://localhost:29340/credits.ttl ; `
+curl http://localhost:29340/terms.ttl ; `
+curl http://localhost:29340/test/app.ttl ; `
+curl http://localhost:29340/test/app.ntriples ; `
+curl http://localhost:29340/test/app.json ; `
+curl http://localhost:29340/bgo.ttl
+$?
+
+docker-compose -f tests/system/docker-compose.yml down
+
 ```
 
 

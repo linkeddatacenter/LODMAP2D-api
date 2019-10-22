@@ -5,91 +5,91 @@
 PREFIX bgo: <http://linkeddata.center/lodmap-bgo/v1#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 CONSTRUCT { 
-	?domain bgo:hasAccountView ?accountView .
+    ?domain bgo:hasAccountView ?accountView .
     
     ?accountView 
-    	bgo:amountFormatter ?amountFormatter ;
-    	bgo:referenceFormatter ?referenceFormatter ;
-    	bgo:trendFormatter ?trendFormatter ;
-    	bgo:hasHistoricalPerspective ?historicalPerspective ;
-    	bgo:hasBreakdownPerspective ?breakdownPerspective
+        bgo:amountFormatter ?amountFormatter ;
+        bgo:referenceFormatter ?referenceFormatter ;
+        bgo:trendFormatter ?trendFormatter ;
+        bgo:hasHistoricalPerspective ?historicalPerspective ;
+        bgo:hasBreakdownPerspective ?breakdownPerspective
     .
     
     ?historicalPerspective
-    	bgo:title ?titleHistoricalPerspective ;
-    	bgo:amountFormatter   ?amountFormatterHistoricalPerspective 
+        bgo:title ?titleHistoricalPerspective ;
+        bgo:amountFormatter   ?amountFormatterHistoricalPerspective 
     .
     
     ?breakdownPerspective
-    	bgo:title ?titleBreackdownPerspective ;
-    	bgo:amountFormatter   ?amountFormatterBreackdownPerspective;
-    	bgo:hasTotalizer   ?totalizer  
-    .
-	
-	?perspective
-    	bgo:title ?titlePerspective ;
-    	bgo:amountFormatter   ?amountFormatterPerspectve 
+        bgo:title ?titleBreackdownPerspective ;
+        bgo:amountFormatter   ?amountFormatterBreackdownPerspective;
+        bgo:hasTotalizer   ?totalizer  
     .
     
-	
+    ?perspective
+        bgo:title ?titlePerspective ;
+        bgo:amountFormatter   ?amountFormatterPerspectve 
+    .
+    
+    
     ?totalizer
         bgo:filteredFormat ?filteredFormat ;
-    	bgo:ratioFormatter ?ratioFormatter
+        bgo:ratioFormatter ?ratioFormatter
     .
     
-	?formatter
-    	bgo:format ?format  ;
-    	bgo:scaleFactor ?scaleFactor ;
-    	bgo:precision ?precision ;
-    	bgo:maxValue ?maxValue;
-    	bgo:minValue ?minValue ; 
-    	bgo:nanFormat ?nanFormat ;
-    	bgo:moreThanMaxFormat ?moreThanMaxFormat ;
-    	bgo:lessThanMinFormat ?lessThanMaxFormat
-    . 	
+    ?formatter
+        bgo:format ?format  ;
+        bgo:scaleFactor ?scaleFactor ;
+        bgo:precision ?precision ;
+        bgo:maxValue ?maxValue;
+        bgo:minValue ?minValue ; 
+        bgo:nanFormat ?nanFormat ;
+        bgo:moreThanMaxFormat ?moreThanMaxFormat ;
+        bgo:lessThanMinFormat ?lessThanMaxFormat
+    .   
 } 
 WHERE {
-	<?php if ($domainId) {?>
-		?domain bgo:domainId "<?php echo $domainId;?>" .
-	<?php } else { ?>
-		FILTER NOT EXISTS { ?domain bgo:domainId [] } .
-	<?php }?>
-	?domain bgo:hasAccountView  ?accountView .
-	
-	OPTIONAL { ?accountView bgo:amountFormatter ?amountFormatter }
+    <?php if ($domainId) {?>
+        ?domain bgo:domainId "<?php echo $domainId;?>" .
+    <?php } else { ?>
+        FILTER NOT EXISTS { ?domain bgo:domainId [] } .
+    <?php }?>
+    ?domain bgo:hasAccountView  ?accountView .
+    
+    OPTIONAL { ?accountView bgo:amountFormatter ?amountFormatter }
     OPTIONAL { ?accountView bgo:referenceFormatter ?referenceFormatter }
     OPTIONAL { ?accountView bgo:trendFormatter ?trendFormatter }
     OPTIONAL { ?accountView bgo:hasHistoricalPerspective ?historicalPerspective }
     OPTIONAL { 
-    	?accountView bgo:hasBreakdownPerspective ?breakdownPerspective 
-    	OPTIONAL { ?breakdownPerspective bgo:hasTotalizer ?totalizer }
-    	OPTIONAL { ?breakdownPerspective bgo:hasTotalizer/bgo:filteredFormat ?filteredFormat }
+        ?accountView bgo:hasBreakdownPerspective ?breakdownPerspective 
+        OPTIONAL { ?breakdownPerspective bgo:hasTotalizer ?totalizer }
+        OPTIONAL { ?breakdownPerspective bgo:hasTotalizer/bgo:filteredFormat ?filteredFormat }
     }
 
-	OPTIONAL {
-		?accountView bgo:hasHistoricalPerspective|bgo:hasBreakdownPerspective ?perspective .
-		OPTIONAL { ?perspective  bgo:title ?titlePerspective }
-		OPTIONAL { ?perspective  bgo:amountFormatter  ?amountFormatterPerspectve  }
-	}
-	
-	OPTIONAL {
-		{ ?accountView bgo:amountFormatter|bgo:referenceFormatter|bgo:trendFormatter ?formatter }
-		UNION
-		{ 
-			?accountView bgo:hasHistoricalPerspective|bgo:hasBreakdownPerspective ?perspective .
-			?perspective  bgo:amountFormatter ?formatter
-		}
-		UNION
-		{ 
-			?accountView bgo:hasHistoricalPerspective/bgo:hasTotalizer/bgo:ratioFormatter ?formatter
-		}
-    	OPTIONAL { ?formatter bgo:format ?format  }
-    	OPTIONAL { ?formatter bgo:scaleFactor ?scaleFactor }
-    	OPTIONAL { ?formatter bgo:precision ?precision }
-    	OPTIONAL { ?formatter bgo:maxValue ?maxValue }
-    	OPTIONAL { ?formatter bgo:minValue ?minValue } 
-    	OPTIONAL { ?formatter bgo:nanFormat ?nanFormat }
-    	OPTIONAL { ?formatter bgo:moreThanMaxFormat ?moreThanMaxFormat }
-    	OPTIONAL { ?formatter bgo:lessThanMinFormat ?lessThanMaxFormat } 
-	}    
+    OPTIONAL {
+        ?accountView bgo:hasHistoricalPerspective|bgo:hasBreakdownPerspective ?perspective .
+        OPTIONAL { ?perspective  bgo:title ?titlePerspective }
+        OPTIONAL { ?perspective  bgo:amountFormatter  ?amountFormatterPerspectve  }
+    }
+    
+    OPTIONAL {
+        { ?accountView bgo:amountFormatter|bgo:referenceFormatter|bgo:trendFormatter ?formatter }
+        UNION
+        { 
+            ?accountView bgo:hasHistoricalPerspective|bgo:hasBreakdownPerspective ?perspective .
+            ?perspective  bgo:amountFormatter ?formatter
+        }
+        UNION
+        { 
+            ?accountView bgo:hasHistoricalPerspective/bgo:hasTotalizer/bgo:ratioFormatter ?formatter
+        }
+        OPTIONAL { ?formatter bgo:format ?format  }
+        OPTIONAL { ?formatter bgo:scaleFactor ?scaleFactor }
+        OPTIONAL { ?formatter bgo:precision ?precision }
+        OPTIONAL { ?formatter bgo:maxValue ?maxValue }
+        OPTIONAL { ?formatter bgo:minValue ?minValue } 
+        OPTIONAL { ?formatter bgo:nanFormat ?nanFormat }
+        OPTIONAL { ?formatter bgo:moreThanMaxFormat ?moreThanMaxFormat }
+        OPTIONAL { ?formatter bgo:lessThanMinFormat ?lessThanMaxFormat } 
+    }    
 }

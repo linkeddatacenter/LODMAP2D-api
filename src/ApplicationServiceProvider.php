@@ -88,7 +88,7 @@ class ApplicationServiceProvider implements ServiceProviderInterface
         $app['urlRewriter'] = function ($app) {
             return new \LinkedDataCenter\UrlRewriter([
                 '/$' => '/app',             # root defaults to /app
-                '/(.*)\\.(ttl|turtle|n3|txt|nt|ntriples|rdf|xml|rdfs|owl|jsonld|json)$' => '/$1',    # remove known extensions
+                '/(.*)\\.(ttl|turtle|n3|txt|nt|ntriples|rdf|xml|rdfs|owl|jsonld|json)$' => '/$1',
             ]);
         };
         
