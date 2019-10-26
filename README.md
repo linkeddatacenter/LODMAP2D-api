@@ -99,9 +99,11 @@ docker rm -f app
 docker-compose down
 ```
 
-**Using the pre-bulid docker image**
+**Using the Docker image**
 
-LODMAP2D-api is available in DockerHub repository
+LODMAP2D-api is available in DockerHub repository. 
+
+The images is optimized for http disk caching.
 
 The linkeddatacenter/lodmap2d-api supports following environment variables:
 
